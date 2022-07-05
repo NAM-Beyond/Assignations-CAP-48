@@ -1,0 +1,22 @@
+body {
+	background-color: #BBBBA0;
+}
+#Title {
+	filter: drop-shadow(0px 2px 2px #000000);
+	background-color: #AAAAFF;
+	text-align: center;
+	font-weight: bold;
+}
+#Assignation {
+	background-color: #5555FF;
+	filter: drop-shadow(0px 2px 2px #000000);
+	padding-top: 5px;
+	padding-bottom: 5px;
+	border: 1px solid #000000;
+	border-radius: 5px;
+}
+#Frame {
+	float: left;
+	width: 100%;
+	opacity: 0;
+}
