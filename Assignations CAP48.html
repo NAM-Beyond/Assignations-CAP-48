@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <title>Assignations CAP 48</title>
+        <meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" type="text/css" href="Files CAP 48/stylesheet.css">
+		<script type="text/javascript" src="Files CAP 48/liste CAP 48.json"></script>
+		<script type="text/javascript" src="Files CAP 48/main script.js"></script>
+    </head>
+    <body>
+        <header id="Title">Assignations CAP 48</header>
+		<br>
+		<section style="text-align: center;">
+			<label for="date">Date de la garde à assigner : </label>
+			<input id="Date" type="date" title="Date de la garde à assigner" style="background-color: #FFFF96;" onchange="UpdateList(document.getElementById('JourNuit').value, document.getElementById('Date').value.split(/-/))">
+			<select id="JourNuit" title="Indiquez s'il s'agit d'une garde de jour ou de nuit" style="background-color: #FFFF96;" onchange="UpdateList(document.getElementById('JourNuit').value)">
+				<option value="jour">Jour</option>
+				<option value="nuit" selected>Nuit</option>
+			</select>
+			<button id="Assignation" onclick="Assigner()";>Assigner</button>
+		</section>
+		<br>
+		<section>
+			<div id="assignables" style="float:left;">
+			</div>
+			<div id="dispensés" style="float:right;">
+			</div>
+			<div id="Gagnant" style="text-align:center;">
+			</div>
+		</section>
+		<div id="Frame"></div>
+	</body>	
+</html>
