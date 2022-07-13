@@ -13,8 +13,8 @@
 		<br>
 		<section style="text-align: center;">
 			<label for="date">Date de la garde à assigner : </label>
-			<input id="Date" type="date" title="Date de la garde à assigner" style="background-color: #FFFF96;" onchange="UpdateList(document.getElementById('JourNuit').value, document.getElementById('Date').value.split(/-/))">
-			<select id="JourNuit" title="Indiquez s'il s'agit d'une garde de jour ou de nuit" style="background-color: #FFFF96;" onchange="UpdateList(document.getElementById('JourNuit').value)">
+			<input id="Date" type="date" title="Date de la garde à assigner" style="background-color: #FFFF96;" onchange="UpdateDate()">
+			<select id="JourNuit" title="Indiquez s'il s'agit d'une garde de jour ou de nuit" style="background-color: #FFFF96;" onchange="UpdateJour()">
 				<option value="jour">Jour</option>
 				<option value="nuit" selected>Nuit</option>
 			</select>
