@@ -52,8 +52,8 @@ function UpdateJour() {
 	// Si une date a été sélectionnée, il va falloir vérifier sur le tableau de garde quels sont les médecins à retirer de la liste des assignables (par défaut le jour même, les 3 jours précédents et les 3 jours suivants)
 }
 function UpdateDate() {
-	ListeAssignables = ListeAssignables.concat(ListeTempDispenses).sort();
-	ListeDispenses = ListeDispenses.filter(item => !ListeTempDispenses.includes(item));
+	ListeAssignables = ListeAssignables.concat(ListeTempDispenses.filter(item => !ListeDispensesNuit.includes(item))).sort();
+	ListeDispenses = ListeDispenses.filter(item => !ListeTempDispenses.filter(name => !ListeDispensesNuit.includes(name)).includes(item));
 	ListeTempDispenses = [];
 	// On récupère la date sélectionnée dans le champ de choix de date et on récupère le mois et le jour dans un tableau
 	var Date = document.getElementById("Date").value.split(/-/).slice(1, 3);
@@ -72,7 +72,11 @@ function UpdateDate() {
 			}
 		}
 	}
-	UpdateJour();
+	console.log("ListeTempDispenses est : ", ListeTempDispenses);
+	ListeAssignables = ListeAssignables.filter(item => !ListeTempDispenses.includes(item));
+	ListeDispenses = Array.from(new Set(ListeDispenses.concat(ListeTempDispenses))).sort();
+	DrawList("assignables", ListeAssignables);
+	DrawList("dispensés", ListeDispenses);
 }
 function Extraire(MoisCourant, JourCourant, RangLimite, Sens) {
 	for (m = 0; m < RangLimite; m ++) {
@@ -88,7 +92,12 @@ function Extraire(MoisCourant, JourCourant, RangLimite, Sens) {
 			RangLimite += 1;
 		}
 		console.log("On extrait la garde du ", ListeGarde[MoisCourant][JourCourant + m * Sens].split(/(?<=[0-9]) (?=[A-Z])/)[0], " effectuée par le Dr. ", ListeGarde[MoisCourant][JourCourant + m * Sens].split(/(?<=[0-9]) (?=[A-Z])/)[1]);
-		ListeTempDispenses.push(ListeGarde[MoisCourant][JourCourant + m * Sens].split(/(?<=[0-9]) (?=[A-Z])/)[1]);
+		if (!ListeExemptes.includes(ListeGarde[MoisCourant][JourCourant + m * Sens].split(/(?<=[0-9]) (?=[A-Z])/)[1])) {
+			ListeTempDispenses.push(ListeGarde[MoisCourant][JourCourant + m * Sens].split(/(?<=[0-9]) (?=[A-Z])/)[1]);
+		}
+		else {
+			console.log("Ah finalement pas, déjà exempté");
+		}
 	}
 }
 function Assigner() {
@@ -100,56 +109,23 @@ function Assigner() {
 function Retirer(Medecin, liste) {
 	let retirer = confirm("Voulez vous retirer le Dr. " + Medecin + " de la liste des " + liste.id + " ?");
 	if (retirer) {
-			switch (liste.id) {
-				case "assignables":
-					ListeDesignables.splice(ListeDesignables.indexOf(Medecin), 1);
-					ListeExemptes.push(Medecin);
-					ListeExemptes.sort();
-					ListeDispenses = (JourNuit == "jour") ? ListeExemptes : Array.from(new Set(ListeExemptes.concat(ListeDispensesNuit).sort()));
-					break;
-				case "dispensés":
-					ListeExemptes.splice(ListeExemptes.indexOf(Medecin), 1);
-					ListeDispenses = (JourNuit.value == "jour") ? ListeExemptes : Array.from(new Set(ListeExemptes.concat(ListeDispensesNuit).sort()));
-					if (!ListeDispenses.includes(Medecin)) {
-						ListeDesignables.push(Medecin);
-						ListeDesignables.sort();
-					}
-					break;
-			}
-			DrawList("assignables", ListeDesignables);
-			DrawList("dispensés", ListeDispenses);
+		switch (liste.id) {
+			case "assignables":
+				ListeDesignables.splice(ListeDesignables.indexOf(Medecin), 1);
+				ListeExemptes.push(Medecin);
+				ListeExemptes.sort();
+				ListeDispenses = (JourNuit == "jour") ? ListeExemptes : Array.from(new Set(ListeExemptes.concat(ListeDispensesNuit).sort()));
+				break;
+			case "dispensés":
+				ListeExemptes.splice(ListeExemptes.indexOf(Medecin), 1);
+				ListeDispenses = (JourNuit.value == "jour") ? ListeExemptes : Array.from(new Set(ListeExemptes.concat(ListeDispensesNuit).sort()));
+				if (!ListeDispenses.includes(Medecin)) {
+					ListeDesignables.push(Medecin);
+					ListeDesignables.sort();
+				}
+				break;
+		}
+		DrawList("assignables", ListeDesignables);
+		DrawList("dispensés", ListeDispenses);
 	}
 }
-/*
-Fonction jour / nuit (déclenchée donc nécessairement changement d'état)
-
-- Si jour :
-	* On ajoute les dispensés de nuit à la liste assignables en filtrant ceux qui sont exemptés et ceux qui sont dispensés temporaires
-	* On enlève les dispensés de nuit de la liste dispensés en filtrant ceux qui sont exemptés et ceux qui sont dispensés temporaires
-
-- Si nuit :
-	* On enlève les dispensés de nuit de la liste assignables
-	* On ajoute les dispensés de nuit à la liste dispensés en filtrant les doublons
-	
-	
-	
-Fonction date définie (déclenchée donc nécessairement changement d'état)
-
-- On ajoute les dispensés temporaires à la liste assignables en filtrant (ceux qui sont exemptés et) ceux qui sont dispensés de nuit
-
-- On enlève les dispensés temporaires à la liste dispensés en filtrant (ceux qui sont exemptés et) ceux qui sont dispensés de nuit
-
-- On réinitialise la liste dispensés temporaires
-
-- On la met à jour
-
-- On enlève les dispensés temporaires de la liste assignables
-
-- On ajoute les dispensés temporaires à la liste dispensés en filtrant les doublons
-
-
-
-Fonction Extraire :
-
-- On ajoute les médecins aux dispensés temporaires en filtrant ceux qui sont exemptés
-*/
