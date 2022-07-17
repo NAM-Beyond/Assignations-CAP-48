@@ -111,21 +111,29 @@ function Retirer(Medecin, liste) {
 	if (retirer) {
 		switch (liste.id) {
 			case "assignables":
-				ListeDesignables.splice(ListeDesignables.indexOf(Medecin), 1);
+				ListeAssignables.splice(ListeAssignables.indexOf(Medecin), 1);
 				ListeExemptes.push(Medecin);
-				ListeExemptes.sort();
-				ListeDispenses = (JourNuit == "jour") ? ListeExemptes : Array.from(new Set(ListeExemptes.concat(ListeDispensesNuit).sort()));
+                                ListeDispenses.push(Medecin);
 				break;
 			case "dispensés":
-				ListeExemptes.splice(ListeExemptes.indexOf(Medecin), 1);
-				ListeDispenses = (JourNuit.value == "jour") ? ListeExemptes : Array.from(new Set(ListeExemptes.concat(ListeDispensesNuit).sort()));
-				if (!ListeDispenses.includes(Medecin)) {
-					ListeDesignables.push(Medecin);
-					ListeDesignables.sort();
+                                if (ListeExemptes.includes(Medecin)) {
+					ListeExemptes.splice(ListeExemptes.indexOf(Medecin), 1);
+				}
+                                else if (JourNuit.value == "nuit" && ListeDispensesNuit.includes(Medecin)) {
+					alert("Le Dr. " + Medecin + " ne peut être retiré de la liste des dispensés car il fait déjà parti des dispensés de garde de nuit.");
+				}
+                                else if (ListeTempDispenses.includes(Medecin)) {
+					alert("Le Dr. " + Medecin + " ne peut être retiré de la liste des dispensés car il effectue déjà une garde dans la période de la garde à attribuer");
+				}
+                                else {
+					ListeDispenses.splice(ListeDispenses.indexOf(Medecin), 1);
+                                        ListeAssignables.push(Medecin);
 				}
 				break;
-		}
-		DrawList("assignables", ListeDesignables);
+                }
+                ListeAssignables.sort();
+		DrawList("assignables", ListeAssignables);
+                ListeDispenses.sort();
 		DrawList("dispensés", ListeDispenses);
 	}
 }
