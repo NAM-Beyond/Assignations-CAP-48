@@ -10,7 +10,7 @@ var ListeDispenses = [];
 var ListeTempDispenses = [];
 // La liste dans lequel on va intégrer le tableau de garde à jour avec un format "Jourdelagarde Nomdumédecin"
 var ListeGarde = [];
-// Nécessité d'une fonction asyncrone car on utilise un fetch pour aller chercher le tableau de garde actualisé sur Lifen
+// Nécessité d'une fonction asynchrone car on utilise un fetch pour aller chercher le tableau de garde actualisé sur Lifen
 window.onload = async function loaded() {
 	// 2 listes différentes, ListeDesignables tiendra compte du retrait des personnes de gardes les jours autour de la date à désignées, si changement de date, la liste sera correctement mise à jour avec ListeAssignables qui n'aura pas été modifiée par le choix de jour
 	DrawList("assignables", ListeAssignables);
@@ -148,15 +148,18 @@ function Retirer(Medecin, liste) {
 				}
 				break;
 			case "dispensés":
+				// Il n'y a pas de superpositions entre la liste exemptés et la liste des dispensés temporaires, en revanche la liste des dispensés de nuit chevauche les deux
+				// On retire de base de la liste exemptés si le médecin y figure puis on vérifie qu'il n'appartient pas à une autre des deux liste avant de le retirer complètement de la liste générale
 				if (ListeExemptes.includes(Medecin)) {
 					ListeExemptes.splice(ListeExemptes.indexOf(Medecin), 1);
 				}
 				if (ListeDispensesNuit.includes(Medecin)) {
-					alert("Le Dr. " + Medecin + " ne peut être retiré.e de la liste des dispensés car il/elle fait déjà parti des dispensés de garde de nuit.");
+					alert("Le Dr. " + Medecin + " ne peut être retiré.e de la liste des dispensés car il/elle fait déjà parti.e des dispensés de garde de nuit.");
 				}
 				else if (ListeTempDispenses.includes(Medecin)) {
 					alert("Le Dr. " + Medecin + " ne peut être retiré.e de la liste des dispensés car il/elle effectue déjà une garde dans la période de la garde à attribuer");
 				}
+				// À ce stade, cela signifie que le médecin n'est ni dans la liste des dispensés temporaires ni dans la liste des dispensés de nuit dont il est uniquement dans la liste exemptés et on peut donc le retirer de la liste générale
 				else {
 					ListeDispenses.splice(ListeDispenses.indexOf(Medecin), 1);
 					ListeAssignables.push(Medecin);
