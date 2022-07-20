@@ -117,16 +117,17 @@ function Extraire(MoisCourant, JourCourant, RangLimite, Sens) {
 }
 // Fonction qui tire au sort un des médecins parmi la listes des médecins assignables
 function Assigner() {
-	document.getElementById("Gagnant").innerHTML = "<b><u>Médecin désigné</u> :</b><br>";
-	MedecinDesigne = document.createElement("span");
-	MedecinDesigne.innerHTML = ListeAssignables[Math.floor(Math.random() * ListeAssignables.length)];
-	document.getElementById("Gagnant").appendChild(MedecinDesigne);
-	let assigne = confirm("Confirmez vous l'assignation du Dr. " + Medecin + " ?");
+	MedecinDesigne = ListeAssignables[Math.floor(Math.random() * ListeAssignables.length)];
+	let assigne = confirm("Confirmez vous l'assignation du Dr. " + MedecinDesigne + " ?");
 	if (assigne) {
-		ListeExemptes.push(Medecin);
-		ListeDispenses.push(Medecin);
+		document.getElementById("Gagnant").innerHTML = "<b><u>Médecin désigné</u> :</b><br>";
+		MedecinGagnant = document.createElement("span");
+		MedecinGagnant.innerHTML = MedecinDesigne;
+		document.getElementById("Gagnant").appendChild(MedecinGagnant);
+		ListeExemptes.push(MedecinDesigne);
+		ListeDispenses.push(MedecinDesigne);
 		ListeDispenses.sort();
-		ListeAssignables.splice(ListeAssignables.indexOf(Medecin));
+		ListeAssignables.splice(ListeAssignables.indexOf(MedecinDesigne), 1);
 		DrawList("assignables", ListeAssignables);
 		DrawList("dispensés", ListeDispenses);
 	}
