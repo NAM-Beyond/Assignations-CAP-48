@@ -37,14 +37,11 @@ window.onload = async function loaded() {
 function DrawList(id, Liste) {
 	document.getElementById(id).innerHTML = "<b><u>Médecins " + id + "</u> :</b><br>";
 	for (j = 0; j < Liste.length; j++) {
-		NewElement = document.createElement("span");
+		NewElement = document.createElement("div");
 		NewElement.innerHTML = Liste[j];
 		NewElement.id = Liste[j];
 		NewElement.setAttribute("onclick", "Retirer('" + Liste[j] + "', " + id + ")");
 		document.getElementById(id).appendChild(NewElement);
-		// On crée un élément de saut de ligne car en l'incluant dans l'élément, étant donné qu'on récupère l'élément via la méthode innerHTML ou innerText, le <br> génère des bugs
-		br = document.createElement("br");
-		document.getElementById(id).appendChild(br);
 	}
 }
 // Fonction qui se déclenche lorsqu'on modifie la date et l'horaire (Jour / Nuit) de garde à assigner
@@ -154,7 +151,7 @@ function Retirer(Medecin, liste) {
 				if (ListeExemptes.includes(Medecin)) {
 					ListeExemptes.splice(ListeExemptes.indexOf(Medecin), 1);
 				}
-				if (ListeDispensesNuit.includes(Medecin)) {
+				if (JourNuit.value = "nuit" && ListeDispensesNuit.includes(Medecin)) {
 					alert("Le Dr. " + Medecin + " ne peut être retiré.e de la liste des dispensés car il/elle fait déjà parti.e des dispensés de garde de nuit.");
 				}
 				else if (ListeTempDispenses.includes(Medecin)) {
