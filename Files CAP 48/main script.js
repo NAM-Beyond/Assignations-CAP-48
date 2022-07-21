@@ -37,10 +37,11 @@ window.onload = async function loaded() {
 function DrawList(id, Liste) {
 	document.getElementById(id).innerHTML = "<b><u>Médecins " + id + "</u> :</b><br>";
 	for (j = 0; j < Liste.length; j++) {
-		NewElement = document.createElement("div");
+		NewElement = document.createElement("button");
 		NewElement.innerHTML = Liste[j];
 		NewElement.id = Liste[j];
-		NewElement.setAttribute("onclick", "Retirer('" + Liste[j] + "', " + id + ")");
+		NewElement.className = "medecin";
+		NewElement.setAttribute("onclick", 'Retirer("' + Liste[j] + '", ' + id + ')');
 		document.getElementById(id).appendChild(NewElement);
 	}
 }
@@ -82,7 +83,7 @@ function UpdateDate() {
 			}
 		}
 	}
-	// On met à jours les listes avec la nouvelle liste des dispensés temporaires
+	// On met à jour les listes avec la nouvelle liste des dispensés temporaires
 	ListeAssignables = ListeAssignables.filter(item => !ListeTempDispenses.includes(item));
 	ListeDispenses = Array.from(new Set(ListeDispenses.concat(ListeTempDispenses))).sort();
 	DrawList("assignables", ListeAssignables);
