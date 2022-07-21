@@ -27,3 +27,15 @@ body {
 	top: 2px;
 	left: 1px;
 }
+.medecin {
+	position: relative;
+	border: none;
+	display: block;
+	background-color: inherit;
+	font-family: inherit;
+	margin: 2px;
+}
+.medecin:active {
+	top: 2px;
+	left: 1px;
+}
